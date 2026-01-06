@@ -26,13 +26,10 @@ export default function ReelItem({ dish, isActive, onOpenOrder }: ReelItemProps)
     }, [isActive]);
 
     const bind = useGesture({
-        onDragEnd: ({ movement: [mx], swipe: [swipeX] }) => {
-            if (swipeX === -1 || mx < -50) { // Swipe Left (simulating Right Swipe on content moving left, wait. User swipes RIGHT to order, so content moves RIGHT? No. Usually "Swipe Right" means finger moves Right. Content moves Right.
-                // Instructions: "Right swipe: Instantly transition to order page".
-                // If finger moves Right (mx > 0).
-                if (mx > 50) {
-                    onOpenOrder();
-                }
+        onDragEnd: ({ movement: [mx] }) => {
+            // Swipe Left (mx < -50) to Order
+            if (mx < -50) {
+                onOpenOrder();
             }
         }
     });
@@ -87,15 +84,16 @@ export default function ReelItem({ dish, isActive, onOpenOrder }: ReelItemProps)
                 </button>
             </div>
 
-            {/* Hint Arrow */}
+            {/* Hint Arrow (Right Side pointing Left) */}
             {isActive && (
                 <motion.div
                     initial={{ x: 0, opacity: 0 }}
-                    animate={{ x: 10, opacity: 1 }}
-                    transition={{ repeat: Infinity, duration: 1.5, repeatType: 'reverse' }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 text-sm font-medium rotate-90 origin-left"
+                    animate={{ x: -10, opacity: 1 }}
+                    transition={{ repeat: Infinity, duration: 1.5, repeatType: 'reverse', delay: 1 }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none"
                 >
-                    Swipe Right to Order
+                    <span className="text-white/80 text-sm font-bold shadow-black drop-shadow-md">Order</span>
+                    <div className="w-2 h-2 border-t-2 border-l-2 border-white -rotate-45" />
                 </motion.div>
             )}
         </div>

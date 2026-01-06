@@ -87,8 +87,12 @@ export default function FeedContainer() {
                 isOpen={isOrderOpen}
                 onClose={() => setIsOrderOpen(false)}
                 onOrder={() => {
-                    alert('Order Placed! 🍔');
+                    // Show a toast or banner (using simple alert/state for now, could be improved)
+                    // For now, let's assume we just redirect
                     setIsOrderOpen(false);
+                    // Force a hard navigation or use a router if available inside component.
+                    // Since FeedContainer is a client component, we should use useRouter.
+                    window.location.href = '/tracking?order=success';
                 }}
             />
         </div>
