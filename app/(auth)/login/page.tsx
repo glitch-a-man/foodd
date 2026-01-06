@@ -1,15 +1,24 @@
 'use client';
 
+import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 export default function LoginPage() {
     const router = useRouter();
+    const { login } = useAuth();
+    const [loading, setLoading] = useState(false);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Verify login logic here
+        setLoading(true);
+        const form = e.target as HTMLFormElement;
+        const email = (form.elements[0] as HTMLInputElement).value;
+
+        await login(email);
+        setLoading(false);
         router.push('/home');
     };
 
@@ -27,6 +36,7 @@ export default function LoginPage() {
                     <div>
                         <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
                         <input
+                            required
                             type="email"
                             placeholder="you@example.com"
                             className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors"
@@ -35,6 +45,7 @@ export default function LoginPage() {
                     <div>
                         <label className="block text-sm font-medium text-gray-400 mb-1">Password</label>
                         <input
+                            required
                             type="password"
                             placeholder="••••••••"
                             className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors"
@@ -43,8 +54,10 @@ export default function LoginPage() {
 
                     <button
                         type="submit"
-                        className="w-full bg-orange-500 hover:bg-orange-600 text-black font-bold py-4 rounded-xl mt-4 transition-transform active:scale-95"
+                        disabled={loading}
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-black font-bold py-4 rounded-xl mt-4 transition-transform active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
+                        {loading && <Loader2 className="animate-spin" size={20} />}
                         Sign In
                     </button>
                 </form>

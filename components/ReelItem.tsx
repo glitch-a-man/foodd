@@ -39,21 +39,24 @@ export default function ReelItem({ dish, isActive, onOpenOrder }: ReelItemProps)
             {...bind()}
             className="full-screen snap-center relative bg-black flex items-center justify-center overflow-hidden touch-none"
         >
-            {/* Video Layer */}
-            <video
-                ref={videoRef}
-                src={dish.videoUrl}
-                className="w-full h-full object-cover"
-                loop
-                playsInline
-                muted
-            />
+            {/* Video Layer - Optimized */}
+            <div className="absolute inset-0 w-full h-full bg-black">
+                <video
+                    ref={videoRef}
+                    src={dish.videoUrl}
+                    className="w-full h-full object-cover will-change-transform"
+                    loop
+                    playsInline
+                    muted
+                    preload="metadata"
+                />
+            </div>
 
             {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none will-change-transform" />
 
             {/* Info Layer */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 pb-12 flex flex-col gap-3 pointer-events-none">
+            <div className="absolute bottom-0 left-0 right-0 p-6 pb-12 flex flex-col gap-3 pointer-events-none will-change-transform translate-z-0">
 
                 <div className="flex items-center gap-2 mb-1">
                     <span className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
