@@ -56,9 +56,9 @@ export default function LandingPage() {
           >
             <Link
               href="/register"
-              className="w-full sm:w-auto px-8 py-4 bg-primary text-black font-bold rounded-full text-lg hover:bg-orange-600 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-10 py-5 bg-primary text-black font-bold rounded-full text-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all hover:scale-110 active:scale-95 flex items-center justify-center gap-2 group"
             >
-              Start Exploring <Play size={20} fill="currentColor" />
+              Start Exploring <Play size={20} fill="currentColor" className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/login"
