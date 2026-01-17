@@ -11,15 +11,23 @@ const handler = NextAuth({
     pages: {
         signIn: '/login',
     },
+    // Required for production
+    secret: process.env.NEXTAUTH_SECRET,
+    // Use JWT strategy which works better across different origins
+    session: {
+        strategy: "jwt",
+    },
     callbacks: {
         async session({ session, token }) {
-            if (session.user) {
+            if (session.user && token.sub) {
                 // @ts-ignore
                 session.user.id = token.sub;
             }
             return session;
         },
     },
+    // Helpful for debugging deployment issues
+    debug: process.env.NODE_ENV === "development",
 });
 
 export { handler as GET, handler as POST };
