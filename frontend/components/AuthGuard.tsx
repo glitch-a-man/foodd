@@ -1,19 +1,20 @@
 'use client';
 
-import { useAuth } from '@/context/AuthContext';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-    const { user, isLoading } = useAuth();
+    const { data: session, status } = useSession();
     const router = useRouter();
+    const isLoading = status === 'loading';
 
     useEffect(() => {
-        if (!isLoading && !user) {
+        if (!isLoading && !session) {
             router.push('/login');
         }
-    }, [user, isLoading, router]);
+    }, [session, isLoading, router]);
 
     if (isLoading) {
         return (
@@ -23,7 +24,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         );
     }
 
-    if (!user) {
+    if (!session) {
         return null; // Will redirect via useEffect
     }
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: "Discover the best dishes around you through immersive videos.",
 };
 
-import { AuthProvider } from '@/context/AuthContext';
+import { NextAuthProvider } from '@/components/providers/SessionProvider';
 
 export default function RootLayout({
   children,
@@ -29,9 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
       <body className="font-body bg-black text-white antialiased">
-        <AuthProvider>
+        <NextAuthProvider>
           {children}
-        </AuthProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

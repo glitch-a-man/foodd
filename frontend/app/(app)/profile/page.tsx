@@ -1,9 +1,22 @@
 'use client';
 
-import { Settings, LogOut } from 'lucide-react';
-import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
+import { Settings, LogOut, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ProfilePage() {
+    const { data: session, status } = useSession();
+
+    if (status === 'loading') {
+        return (
+            <div className="min-h-full flex items-center justify-center bg-black">
+                <Loader2 className="animate-spin text-orange-500" size={32} />
+            </div>
+        );
+    }
+
+    const user = session?.user;
+
     return (
         <div className="min-h-full bg-black text-white p-6 pb-24">
             <div className="flex justify-between items-center mb-8">
@@ -14,9 +27,20 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex flex-col items-center mb-10">
-                <div className="w-24 h-24 bg-gradient-to-tr from-orange-500 to-yellow-500 rounded-full mb-4 shadow-lg shadow-orange-500/20" />
-                <h2 className="text-xl font-bold">Foodie Explorer</h2>
-                <p className="text-gray-400">@foodlover</p>
+                <div className="relative w-24 h-24 mb-4">
+                    {user?.image ? (
+                        <Image
+                            src={user.image}
+                            alt={user.name || 'User'}
+                            fill
+                            className="rounded-full object-cover shadow-lg shadow-orange-500/20"
+                        />
+                    ) : (
+                        <div className="w-24 h-24 bg-gradient-to-tr from-orange-500 to-yellow-500 rounded-full shadow-lg shadow-orange-500/20" />
+                    )}
+                </div>
+                <h2 className="text-xl font-bold">{user?.name || 'Foodie Explorer'}</h2>
+                <p className="text-gray-400">{user?.email}</p>
 
                 <div className="flex gap-6 mt-6">
                     <div className="text-center">
@@ -43,10 +67,13 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
-                <Link href="/" className="flex items-center gap-3 bg-red-500/10 text-red-500 p-4 rounded-xl mt-auto">
+                <button
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className="w-full flex items-center gap-3 bg-red-500/10 text-red-500 p-4 rounded-xl mt-auto transition-colors hover:bg-red-500/20"
+                >
                     <LogOut size={20} />
                     <span className="font-medium">Log Out</span>
-                </Link>
+                </button>
             </div>
         </div>
     );
