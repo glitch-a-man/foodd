@@ -18,6 +18,27 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     callbacks: {
+        async signIn({ user, account, profile }) {
+            if (account?.provider === 'google') {
+                try {
+                    await fetch(`${process.env.BACKEND_URL || 'http://localhost:5000'}/api/users/sync`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: user.name,
+                            email: user.email,
+                            image: user.image,
+                            googleId: user.id,
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error syncing user to backend:', error);
+                }
+            }
+            return true;
+        },
         async session({ session, token }) {
             if (session.user && token.sub) {
                 // @ts-ignore

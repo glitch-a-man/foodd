@@ -3,14 +3,14 @@
 This project is split into two main parts:
 
 - **frontend**: React/Next.js application.
-- **backend**: Future backend service (tech stack to be determined).
+- **backend**: Node.js + Express + MongoDB.
 
 ## Project Structure
 
 ```bash
 .
 ├── frontend/    # Next.js frontend
-└── backend/     # Backend services
+└── backend/     # Express backend
 ```
 
 ## Getting Started
@@ -27,7 +27,21 @@ npm run dev
 
 ### Backend
 
-(Details to be added once backend technology is chosen)
+The backend is built with **Node.js + Express** and uses **MongoDB** for data persistence.
+
+To run the backend:
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Key features:
+- User synchronization with Google OAuth
+- MongoDB integration with Mongoose
+- Standard API security (Helmet, CORS)
+- Logging with Morgan
 
 ## Deployment (Google OAuth Setup)
 
