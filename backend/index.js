@@ -35,6 +35,15 @@ app.get('/', (req, res) => {
 // User routes
 app.use('/api/users', require('./routes/userRoutes'));
 
+// Restaurant routes
+app.use('/api/restaurants', require('./routes/restaurantRoutes'));
+
+// Menu routes
+app.use('/api/menus', require('./routes/menuRoutes'));
+
+// Menu Item routes
+app.use('/api/menu-items', require('./routes/menuItemRoutes'));
+
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
