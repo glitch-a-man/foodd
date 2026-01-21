@@ -41,11 +41,24 @@ const importData = async () => {
                 lastName: 'A Man',
                 email: testUserEmail,
                 image: 'https://lh3.googleusercontent.com/a/ACg8ocL_XF-XfX_XF-XfX_XF=s96-c',
-                role: 'user'
+                role: 'user',
+                address: 'C-Scheme, Jaipur, Rajasthan',
+                location: {
+                    type: 'Point',
+                    coordinates: [75.8062, 26.9157], // Jaipur coordinates
+                    formattedAddress: 'C-Scheme, Jaipur, Rajasthan'
+                }
             });
             console.log(`Test user ${testUserEmail} created.`);
         } else {
-            console.log(`Test user ${testUserEmail} already exists.`);
+            user.address = 'C-Scheme, Jaipur, Rajasthan';
+            user.location = {
+                type: 'Point',
+                coordinates: [75.8062, 26.9157],
+                formattedAddress: 'C-Scheme, Jaipur, Rajasthan'
+            };
+            await user.save();
+            console.log(`Test user ${testUserEmail} updated with location.`);
         }
 
         for (const data of restaurantsData) {

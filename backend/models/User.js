@@ -36,6 +36,21 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'
     }],
+    address: {
+        type: String,
+    },
+    location: {
+        // GeoJSON Point
+        type: {
+            type: String,
+            enum: ['Point'],
+        },
+        coordinates: {
+            type: [Number],
+            index: '2dsphere',
+        },
+        formattedAddress: String,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

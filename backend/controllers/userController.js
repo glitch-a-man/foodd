@@ -5,7 +5,7 @@ const User = require('../models/User');
 // @access  Public (Should be protected in production)
 exports.syncUser = async (req, res) => {
     try {
-        const { name, email, image, googleId } = req.body;
+        const { name, email, image, googleId, address, location } = req.body;
 
         // Split name into first and last
         const nameParts = name ? name.split(' ') : [];
@@ -20,6 +20,8 @@ exports.syncUser = async (req, res) => {
             user.firstName = firstName || user.firstName;
             user.lastName = lastName || user.lastName;
             user.image = image || user.image;
+            user.address = address || user.address;
+            user.location = location || user.location;
             if (googleId) user.googleId = googleId;
             await user.save();
             return res.status(200).json({ success: true, data: user, message: 'User updated' });
@@ -33,6 +35,8 @@ exports.syncUser = async (req, res) => {
             email,
             image,
             googleId,
+            address,
+            location,
         });
 
         res.status(201).json({ success: true, data: user, message: 'User created' });
