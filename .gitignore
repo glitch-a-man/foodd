@@ -26,5 +26,6 @@ dist/
 next-env.d.ts
 
 # Isolated Backend Repo
-# backend/ (Managed as separate repo)
+backend/ 
+
 
