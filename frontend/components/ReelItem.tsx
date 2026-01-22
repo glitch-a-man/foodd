@@ -69,8 +69,8 @@ export default function ReelItem({ dish, isActive, onOpenOrder }: ReelItemProps)
 
                 <h2 className="text-3xl font-bold leading-tight shadow-sm">{dish.name}</h2>
                 <div className="flex items-center justify-between">
-                    <p className="text-xl font-medium text-white/90">{dish.restaurant}</p>
-                    <p className="text-2xl font-bold text-white">${dish.price}</p>
+                    <p className="text-xl font-medium text-white/90">{dish.restaurant?.name || 'Unknown Restaurant'}</p>
+                    <p className="text-2xl font-bold text-white">₹{dish.price}</p>
                 </div>
             </div>
 

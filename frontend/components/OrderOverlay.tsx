@@ -66,9 +66,7 @@ export default function OrderOverlay({ dish, isOpen, onClose, onOrder }: OrderOv
                             </div>
 
                             <h3 className="text-2xl font-bold mb-1">{dish.name}</h3>
-                            <p className="text-zinc-400 text-lg mb-6">{dish.restaurant}</p>
-
-                            {/* Location & Address */}
+                            <p className="text-zinc-400 text-lg mb-6">{dish.restaurant?.name || 'Unknown Restaurant'}</p>
                             <div className="space-y-4 mb-8 bg-white/5 p-4 rounded-xl">
                                 <div className="flex gap-3">
                                     <div className="w-8 h-8 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center flex-shrink-0">
@@ -76,18 +74,18 @@ export default function OrderOverlay({ dish, isOpen, onClose, onOrder }: OrderOv
                                     </div>
                                     <div>
                                         <label className="text-xs text-zinc-500 uppercase font-bold">Restaurant Location</label>
-                                        <p className="text-sm">123 Culinary Ave, Food District, NY</p>
+                                        <p className="text-sm">{dish.restaurant?.address || 'Jaipur, Rajasthan'}</p>
                                     </div>
                                 </div>
                                 <div className="w-full h-px bg-white/10" />
                                 <div className="flex gap-3">
                                     <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center flex-shrink-0">
-                                        <MapPin size={16} /> {/* Note: Need to import MapPin */}
+                                        <MapPin size={16} />
                                     </div>
                                     <div>
                                         <label className="text-xs text-zinc-500 uppercase font-bold">Delivering To</label>
                                         <p className="text-sm">Your Saved Address • Home</p>
-                                        <p className="text-xs text-zinc-400">42 User Street, Apartment 5B</p>
+                                        <p className="text-xs text-zinc-400">C-Scheme, Jaipur, Rajasthan</p>
                                     </div>
                                 </div>
                             </div>
@@ -116,15 +114,15 @@ export default function OrderOverlay({ dish, isOpen, onClose, onOrder }: OrderOv
                         <div className="mt-auto pt-4 border-t border-white/10">
                             <div className="flex justify-between mb-4 text-sm">
                                 <span className="text-zinc-400">Subtotal</span>
-                                <span>${(dish.price * quantity).toFixed(2)}</span>
+                                <span>₹{(dish.price * quantity).toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between mb-6 text-sm">
                                 <span className="text-zinc-400">Delivery Fee</span>
-                                <span>$2.99</span>
+                                <span>₹40.00</span>
                             </div>
                             <div className="flex justify-between mb-6 text-xl font-bold">
                                 <span>Total</span>
-                                <span>${(dish.price * quantity + 2.99).toFixed(2)}</span>
+                                <span>₹{(dish.price * quantity + 40).toFixed(2)}</span>
                             </div>
 
                             <button

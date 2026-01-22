@@ -26,7 +26,7 @@ export default function ProfilePage() {
         const fetchUserData = async () => {
             if (session?.user?.email) {
                 try {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000'}/api/users/email/${session.user.email}`);
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000'}/users/email/${session.user.email}`);
                     const json = await response.json();
                     if (json.success) {
                         setDbUser(json.data);

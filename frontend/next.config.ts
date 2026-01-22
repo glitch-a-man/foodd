@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/proxy/:path*',
+        destination: `${process.env.BACKEND_URL || 'http://food-backend.railway.internal'}/api/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

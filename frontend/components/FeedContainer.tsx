@@ -3,20 +3,52 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import ReelItem from './ReelItem';
 import OrderOverlay from './OrderOverlay';
-import { DISHES } from '@/lib/data';
 
-// Create a larger list for "infinite" feel
-// In a real app, you would fetch more data.
-// Here we repeat the 3 items many times.
-const INFINITE_DISHES = Array.from({ length: 30 }).flatMap((_, i) =>
-    DISHES.map(d => ({ ...d, uniqueId: `${d.id}-${i}` }))
-);
+interface MenuItem {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    rating: number;
+    eta: string;
+    videoUrl: string;
+    restaurant: {
+        _id: string;
+        name: string;
+        address: string;
+    };
+    uniqueId?: string;
+}
 
 export default function FeedContainer() {
-    // Start in the middle of the list so user can scroll up immediately
+    const [dishes, setDishes] = useState<MenuItem[]>([]);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isOrderOpen, setIsOrderOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const fetchDishes = async () => {
+            try {
+                const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+                const res = await fetch(`${baseUrl}/menu-items`);
+                const json = await res.json();
+                if (json.success) {
+                    // Create a pseudo-infinite list by duplicating the items
+                    const duplicatedDishes = Array.from({ length: 10 }).flatMap((_, i) =>
+                        json.data.map((d: any) => ({ ...d, uniqueId: `${d._id}-${i}` }))
+                    );
+                    setDishes(duplicatedDishes);
+                }
+            } catch (error) {
+                console.error('Error fetching reels:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDishes();
+    }, []);
 
     const handleScroll = useCallback(() => {
         if (containerRef.current) {
@@ -30,28 +62,22 @@ export default function FeedContainer() {
     // Infinite Scroll Logic: Reset to start if near end
     useEffect(() => {
         const container = containerRef.current;
-        if (!container) return;
+        if (!container || dishes.length === 0) return;
 
-        // If we get too close to the end, reset scroll to near the beginning (seamlessly)
-        // This is a simple trick for "infinite" looping of static content
-        if (activeIndex >= INFINITE_DISHES.length - 5) {
-            // Calculate offset in the original set
-            const offset = activeIndex % DISHES.length;
-            // Jump back to the first occurrence of this offset
-            // We give it a buffer of 1 set (DISHES.length)
-            const newIndex = DISHES.length + offset;
+        if (activeIndex >= dishes.length - 3) {
+            const originalCount = dishes.length / 10;
+            const offset = activeIndex % originalCount;
+            const newIndex = originalCount + offset;
 
-            // Disable scroll snap temporarily to jump without animation
             container.style.scrollSnapType = 'none';
             container.scrollTop = newIndex * window.innerHeight;
             setActiveIndex(newIndex);
 
-            // Re-enable snap after a tiny delay
             requestAnimationFrame(() => {
                 container.style.scrollSnapType = 'y mandatory';
             });
         }
-    }, [activeIndex]);
+    }, [activeIndex, dishes]);
 
     useEffect(() => {
         const el = containerRef.current;
@@ -61,7 +87,15 @@ export default function FeedContainer() {
         }
     }, [handleScroll]);
 
-    const activeDish = INFINITE_DISHES[activeIndex] || INFINITE_DISHES[0];
+    const activeDish = dishes[activeIndex] || dishes[0];
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-full flex items-center justify-center bg-black">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-500"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative w-full h-full bg-black">
@@ -71,7 +105,7 @@ export default function FeedContainer() {
                 className="overflow-y-scroll snap-y snap-mandatory no-scrollbar w-full h-full"
                 style={{ scrollBehavior: 'smooth' }}
             >
-                {INFINITE_DISHES.map((dish, idx) => (
+                {dishes.map((dish, idx) => (
                     <ReelItem
                         key={dish.uniqueId}
                         dish={dish as any}
@@ -82,19 +116,17 @@ export default function FeedContainer() {
             </div>
 
             {/* Order Overlay */}
-            <OrderOverlay
-                dish={activeDish}
-                isOpen={isOrderOpen}
-                onClose={() => setIsOrderOpen(false)}
-                onOrder={() => {
-                    // Show a toast or banner (using simple alert/state for now, could be improved)
-                    // For now, let's assume we just redirect
-                    setIsOrderOpen(false);
-                    // Force a hard navigation or use a router if available inside component.
-                    // Since FeedContainer is a client component, we should use useRouter.
-                    window.location.href = '/tracking?order=success';
-                }}
-            />
+            {activeDish && (
+                <OrderOverlay
+                    dish={activeDish as any}
+                    isOpen={isOrderOpen}
+                    onClose={() => setIsOrderOpen(false)}
+                    onOrder={() => {
+                        setIsOrderOpen(false);
+                        window.location.href = '/tracking?order=success';
+                    }}
+                />
+            )}
         </div>
     );
 }
