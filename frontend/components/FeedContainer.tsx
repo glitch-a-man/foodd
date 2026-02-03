@@ -32,19 +32,24 @@ export default function FeedContainer() {
             try {
                 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
                 const res = await fetch(`${baseUrl}/reels`);
-                const json = await res.json();
-                if (json.success) {
-                    // Map Reel model to Dish interface for ReelItem
-                    const mappedDishes = json.data.map((reel: any) => ({
-                        ...reel.menuItemId,
-                        videoUrl: reel.videoUrl, // Use the reel's videoUrl
-                    }));
 
-                    // Create a pseudo-infinite list by duplicating the items
-                    const duplicatedDishes = Array.from({ length: 10 }).flatMap((_, i) =>
-                        mappedDishes.map((d: any) => ({ ...d, uniqueId: `${d._id}-${i}` }))
-                    );
-                    setDishes(duplicatedDishes);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.success) {
+                        // Map Reel model to Dish interface for ReelItem
+                        const mappedDishes = json.data.map((reel: any) => ({
+                            ...reel.menuItemId,
+                            videoUrl: reel.videoUrl, // Use the reel's videoUrl
+                        }));
+
+                        // Create a pseudo-infinite list by duplicating the items
+                        const duplicatedDishes = Array.from({ length: 10 }).flatMap((_, i) =>
+                            mappedDishes.map((d: any) => ({ ...d, uniqueId: `${d._id}-${i}` }))
+                        );
+                        setDishes(duplicatedDishes);
+                    }
+                } else {
+                    console.error('Failed to fetch reels, status:', res.status);
                 }
             } catch (error) {
                 console.error('Error fetching reels:', error);

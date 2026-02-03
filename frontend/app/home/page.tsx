@@ -57,26 +57,40 @@ export default function HomePage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+            const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
+            try {
                 // Fetch User Data from DB
                 if (session?.user?.email) {
-                    const userRes = await fetch(`${baseUrl}/users/email/${session.user.email}`);
-                    const userJson = await userRes.json();
-                    if (userJson.success) {
-                        setDbUser(userJson.data);
+                    try {
+                        const userRes = await fetch(`${baseUrl}/users/email/${session.user.email}`);
+                        if (userRes.ok) {
+                            const userJson = await userRes.json();
+                            if (userJson.success) {
+                                setDbUser(userJson.data);
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Error fetching user data:', err);
                     }
                 }
 
                 // Fetch Dishes
-                const res = await fetch(`${baseUrl}/menu-items`);
-                const json = await res.json();
-                if (json.success) {
-                    setDishes(json.data);
+                try {
+                    const res = await fetch(`${baseUrl}/menu-items`);
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json.success) {
+                            setDishes(json.data);
+                        }
+                    } else {
+                        console.error('Failed to fetch dishes, status:', res.status);
+                    }
+                } catch (err) {
+                    console.error('Error fetching dishes:', err);
                 }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('General data fetching error:', error);
             } finally {
                 setIsLoading(false);
             }
