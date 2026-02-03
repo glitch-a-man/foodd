@@ -31,12 +31,18 @@ export default function FeedContainer() {
         const fetchDishes = async () => {
             try {
                 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
-                const res = await fetch(`${baseUrl}/menu-items`);
+                const res = await fetch(`${baseUrl}/reels`);
                 const json = await res.json();
                 if (json.success) {
+                    // Map Reel model to Dish interface for ReelItem
+                    const mappedDishes = json.data.map((reel: any) => ({
+                        ...reel.menuItemId,
+                        videoUrl: reel.videoUrl, // Use the reel's videoUrl
+                    }));
+
                     // Create a pseudo-infinite list by duplicating the items
                     const duplicatedDishes = Array.from({ length: 10 }).flatMap((_, i) =>
-                        json.data.map((d: any) => ({ ...d, uniqueId: `${d._id}-${i}` }))
+                        mappedDishes.map((d: any) => ({ ...d, uniqueId: `${d._id}-${i}` }))
                     );
                     setDishes(duplicatedDishes);
                 }

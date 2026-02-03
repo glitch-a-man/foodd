@@ -14,9 +14,9 @@ export default function BottomNav() {
                     <Home size={24} />
                     <span className="text-xs">Home</span>
                 </Link>
-                <Link href="/reels" className={`flex flex-col items-center gap-1 p-2 ${pathname === '/reels' ? 'text-orange-500' : 'text-gray-500'}`}>
+                <Link href="/feed" className={`flex flex-col items-center gap-1 p-2 ${pathname === '/feed' ? 'text-orange-500' : 'text-gray-500'}`}>
                     <Film size={24} />
-                    <span className="text-xs">Reels</span>
+                    <span className="text-xs">Feed</span>
                 </Link>
                 <Link href="/profile" className={`flex flex-col items-center gap-1 p-2 ${pathname === '/profile' ? 'text-white' : 'text-gray-500'}`}>
                     <User size={24} />

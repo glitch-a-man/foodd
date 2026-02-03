@@ -1,0 +1,211 @@
+Project Goal
+
+Restructure the existing project into a clean, flow-driven food delivery web app where:
+
+Users discover food through reels and can order in one tap.
+
+The project currently feels cluttered. The goal is to reorganize the frontend by page intention and user flow, not by components or existing code.
+
+There are three user modes:
+
+Guest (not logged in)
+
+Logged-in User (customer)
+
+Restaurant Owner (admin)
+
+The routing and pages must reflect these modes clearly.
+
+Final Page Architecture
+Guest Pages
+/ — Landing Page
+
+Purpose: Entry point for non-logged-in users.
+
+Contains:
+
+Branding and explanation of the reels-based food discovery concept
+
+CTA buttons for Login and Register
+
+No food feed here
+
+If not built: show placeholder text:
+
+Landing Page — Explains the product and allows users to login or register.
+
+/login — Login Page
+
+Purpose: Google OAuth login via NextAuth.
+
+Flow: Successful login redirects to /home
+
+If not built: show:
+
+Login Page — Users sign in with Google here.
+
+/register — Register Page
+
+Purpose: First-time user entry (also Google OAuth).
+
+Flow: Redirect to /home
+
+If not built: show:
+
+Register Page — First-time users authenticate here.
+
+Logged-in User Pages
+/home — Home Page (Main Hub)
+
+Purpose: First page after login. This is not the reels page.
+
+Contains sections:
+
+Categories / search bar
+
+Preview of reels
+
+Trending dishes carousel
+
+Nearby restaurants
+
+This page connects users to Feed, Discover, and Restaurants.
+
+If not built: show:
+
+Home Page — Main hub after login with categories, reels preview, and discovery sections.
+
+/feed — Reels Feed Page
+
+Purpose: Core feature. Vertical reels of food videos.
+
+Behavior:
+
+Swipe up/down for reels
+
+Right swipe opens /dish/[id]
+
+If not built: show:
+
+Feed Page — Vertical food reels for discovery.
+
+/discover — Discover Page
+
+Purpose: Browsing alternative to reels.
+
+Contains:
+
+Grid of dishes
+
+Carousels
+
+Trending reels
+
+Categories
+
+If not built: show:
+
+Discover Page — Grid and carousel-based food exploration.
+
+/dish/[id] — Dish Order Page
+
+Purpose: Instant ordering page for a dish.
+
+Contains:
+
+Dish preview
+
+Price, ETA, restaurant info
+
+“Order Now” button
+
+If not built: show:
+
+Dish Page — Users can order a specific dish here.
+
+/restaurant/[id] — Restaurant Profile Page
+
+Purpose: Restaurant’s public profile.
+
+Contains sections:
+
+Restaurant info
+
+Menu section (list of dishes)
+
+Reels/Feed section (videos from this restaurant)
+
+If not built: show:
+
+Restaurant Profile Page — Shows restaurant info, menu, and food reels.
+
+/profile — User Profile Page
+
+Purpose: User information and activity.
+
+Contains:
+
+User info from Google
+
+Liked reels
+
+Saved dishes
+
+Link to orders
+
+If not built: show:
+
+User Profile Page — Displays user info and activity.
+
+/orders — Orders Page
+
+Purpose: Show past orders and status.
+
+If not built: show:
+
+Orders Page — Shows user’s past orders.
+
+Restaurant Owner Page
+/restaurant-admin — Restaurant Dashboard
+
+Purpose: For restaurant owners to manage content.
+
+Contains:
+
+Add/edit dishes
+
+Upload reels
+
+Toggle availability
+
+View orders
+
+If not built: show:
+
+Restaurant Admin Page — Dashboard for restaurants to manage menu and reels.
+
+Required Folder Structure (Next.js App Router)
+app/
+ ├── page.tsx
+ ├── login/page.tsx
+ ├── register/page.tsx
+ ├── home/page.tsx
+ ├── feed/page.tsx
+ ├── discover/page.tsx
+ ├── dish/[id]/page.tsx
+ ├── restaurant/[id]/page.tsx
+ ├── profile/page.tsx
+ ├── orders/page.tsx
+ └── restaurant-admin/page.tsx
+
+Important Rules for Restructuring
+
+Do not mix responsibilities of pages.
+
+Each page represents a clear user intention.
+
+Pages not yet implemented must show only placeholder descriptive text.
+
+Focus on clean routing and separation, not UI design yet.
+
+Reels Feed is the core of the app, but not the home page.
